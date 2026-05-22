@@ -1,104 +1,102 @@
-# transcriptPhorge.py
+![Apps rePhorged](Apps_rePhorged.png)
 
----
+# transcriptPhorge
 
-*YouTube Transcript Downloader with Webshare Proxy*
+A simple, reliable Python script to download English transcripts from YouTube playlists or single videos and save them as clean, paragraph-grouped Markdown files.
 
-A simple, reliable Python script to download English transcripts from YouTube playlists or single videos and save them as clean, paragraph-grouped Markdown files. Be aware that the final transcript will only be as good as the original automated YouTube transcript.
+## Overview
 
-- Bypasses YouTube IP blocks using Webshare rotating residential proxies
-- Saves each video as a formatted .md file with title, YouTube link, and readable transcript
-- Includes automatic run-on paragraph detection and a final report
-- Supports both playlist and single-video modes
-- Prompts for Webshare credentials (no hard-coded secrets)
-- 60-second delay between videos (skipped after the last one)
-- Skips already-existing files to prevent overwriting good transcripts
-- Continues asking for more URLs until you quit
+YouTube aggressively blocks repeated caption requests, even from residential IPs. transcriptPhorge bypasses these IP blocks using Webshare rotating residential proxies—the method recommended to reliably pull transcripts at scale.
 
-**Features**
-- Playlist or single-video fetching
-- Run-on text detection & report at the end (flags files with very long unbroken paragraphs)
-- Retries on transient proxy errors
-- No unnecessary pause after the final video
-- --single command-line flag for single-video mode
-- Safe credential handling (prompted once per run)
+The application groups standard caption lines into readable paragraphs instead of outputting massive blocks of unformatted text or hard-to-read one-liners. It automatically flags transcripts with overly long, unbroken sections (often found in Q&A or monologue videos) so you can review them. Be aware that the final transcript will only be as good as the original automated YouTube transcript.
 
-**Requirements**
+## Features
+
+- **Playlist or Single-Video Fetching**: Operate in batch or pinpoint exactly what you need.
+- **Run-on Detection & Report**: Automatically flags generated markdown files that contain very long, unbroken paragraphs (defaults to 1200 characters).
+- **Transient Error Resilience**: Automatically retries on proxy issues or IP blocks to ensure your fetch completes.
+- **Smart Pacing & Skipping**: Introduces configurable delays between pulls and skips existing files to prevent overwriting perfectly good transcripts.
+- **Safe Credential Handling**: Prompts for Webshare credentials once and saves them locally so you aren't hardcoding secrets.
+
+## Requirements
+
 - Python 3.8+
-- Install dependencies:
-`pip install youtube-transcript-api yt-dlp`
+- `youtube-transcript-api` : Required for accessing YouTube's closed captioning API.
+- `yt-dlp` : Required to efficiently extract video IDs from full playlists.
+- Webshare Proxy Account : A free tier or paid account is required to access residential rotating proxies.
 
-Setup – `Webshare Rotating Residential` proxies (Required)
-YouTube aggressively blocks repeated caption requests, even from residential IPs. This script uses Webshare rotating residential proxies — the method recommended by the `youtube-transcript-api` maintainer.
+## Installation
 
-**Steps to set up Webshare**
-1. Go to `https://www.webshare.io`
-2. Sign up (free tier gives 10 proxies / 1 GB trial — enough for testing)
-3. Select `Rotating Residential` proxies (important: not datacenter or static residential)
-4. Upgrade to a paid plan if needed
-   - Rotating Residential Proxy w/ 1 GB: ~$3.50/GB (as of Feb 2026)
-   - Bandwidth usage for transcripts is tiny (<1 MB for 10–20 videos)
-5. After activation:
-   - Go to Dashboard → Proxy List or Proxy Settings
-   - Locate your Proxy Username and Proxy Password
-   - These are what the script prompts for when you run it
+1. Download the script to your local machine. You can clone the repository or download the latest release: `git clone https://github.com/oldmanumby/transcriptPhorge.git`
+2. Change into the project directory: `cd transcriptPhorge`
+3. Install dependencies: `pip install youtube-transcript-api yt-dlp`
 
-**Key notes about Webshare**
-- Always use Residential rotating proxies — datacenter/static ones get blocked quickly
-- You can cancel anytime — no long-term commitment
-- A free trial is usually sufficient for one playlist or a few videos
+## Configuration
 
-## How to Use
+When you first run transcriptPhorge, you'll be prompted to configure your proxy settings. You must set up a Webshare Rotating Residential proxy before proceeding:
 
-1. Clone or download the repo
-git clone `https://github.com/yourusername/transcriptPhorge.git`
-`cd transcriptPhorge`
+1. Go to https://www.webshare.io/ and sign up (the free trial provides enough data for testing).
+2. Select **Rotating Residential** proxies (datacenter/static proxies will be blocked by YouTube).
+3. From your Webshare dashboard, locate your **Proxy Username** and **Proxy Password**.
 
-2. Install dependencies
-`pip install youtube-transcript-api yt-dlp`
+When prompted by the script, enter these credentials. All settings are automatically saved to `transcriptPhorge.conf` in the same directory as the script for future use.
 
-3. Run the script
+## Usage
 
-Playlist mode (default – fetches entire playlists):
-`python transcriptPhorge.py`
+You can execute the script from your terminal or command prompt. It will process each video, fetching the transcript via Webshare, and save it as a numbered Markdown file in the `transcripts/` folder.
 
-Single-video mode (fetch one video at a time):
-`python transcriptPhorge.py --single`
+**Playlist Mode (Default)** Fetch an entire playlist at once: `python transcriptPhorge.py`
 
-**What happens when you run it**
-1. Prompts for your Webshare username and password (only once per run)
-2. Asks for a playlist URL (or video URL in --single mode)
-3. Processes each video:
-   - Fetches transcript via Webshare proxy
-   - Saves as numbered Markdown file in transcripts/ folder
-   - Pauses 60 seconds between videos (skipped after last one)
-4. After finishing:
-   - Shows a Run-on Report if any files have very long, unbroken paragraphs
-   - Asks if you want to process another playlist/video
+**Single Video Mode** Fetch one video at a time using the `--single` flag: `python transcriptPhorge.py --single`
 
-Press Enter (leave input empty) to quit when done.
+### Example Workflow
 
-**Suggestion:** Re-fetch these individually or manually break long paragraphs.
+1. Run the script and confirm your configuration prompts.
+2. Select your delay pacing (e.g., 30 seconds).
+3. Paste the URL of your playlist or video.
+4. Let the application run. It will pause between videos to prevent rapid rate-limiting.
+5. Check your `transcripts/` output destination to verify the results.
+6. Review the Run-on Report at the end of the script to see if you need to manually break up any long paragraphs.
 
-**Customization**
-- Change `RUN_ON_THRESHOLD = 1200` (top of script) to adjust run-on detection sensitivity
-- Modify `time.sleep(60)` to change delay between videos
-- Remove `filter_ip_locations=["us"]` for global IP rotation (may be slower)
-- Add more retries or logging as needed
+## Sample Prompts
 
-**Limitations & Notes**
-- Only fetches English captions (en)
-- Requires YouTube captions (auto or manual)
-- Webshare residential proxy is essential — free proxies, Tor, or VPNs usually get blocked
-- Auto-captions may contain typos, filler words ("um", "uh"), or long run-on sections (especially in Q&A/monologue videos)
+The script uses interactive prompts for easy navigation. Here's what you can expect during a typical run:
 
----
+```
+Webshare username:
+> my_username
 
-**License**
+Webshare password:
+> my_password
 
-Licensed under the GNU General Public License v3.0 (GPL-3.0). This means you can freely use, modify, and distribute this software, provided that:
+Choose delay between videos (seconds):
+  1) 15
+  2) 30 (default)
+  3) 60
+  4) 90
+  5) 120
+Enter number (1–5) or press Enter for 30:
+> 2
 
-- You disclose the source code of your modifications
-- You license your modifications under the same GPL-3.0 license
-- You preserve the original copyright notices and disclaimers
-- See the LICENSE file for the complete text of the GPL-3.0 license.
+Enter playlist URL (or Enter to quit):
+> [https://youtube.com/playlist?list=YOUR_PLAYLIST_ID](https://youtube.com/playlist?list=YOUR_PLAYLIST_ID)
+
+Process another? (y/n):
+> n
+```
+
+## Troubleshooting
+
+- **Error: Max retries exceeded** : Your current proxy IP was likely blocked by YouTube. Ensure you are using "Rotating Residential" proxies in Webshare, not static ones.
+- **Issue: No captions available** : The video might not have an English track available, or captions are disabled entirely. The script will save a placeholder file noting this.
+- **Issue: File has very long paragraphs** : Auto-captions may contain typos, filler words ("um", "uh"), or lack punctuation. You can change `RUN_ON_THRESHOLD = 1200` in the script to adjust detection sensitivity.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0) . You are free to use, modify, and distribute this software, provided that you:
+
+- Disclose the source code of any modifications you make.
+- License your modified versions under the same GPL-3.0 license.
+- Preserve the original copyright notices and disclaimers.
+
+See the LICENSE file for the complete text of the GPL-3.0 license.

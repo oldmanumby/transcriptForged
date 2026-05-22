@@ -1,15 +1,54 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+transcriptPhorge
+
+A simple, reliable Python script to download English transcripts from YouTube
+playlists or single videos and save them as clean, paragraph-grouped Markdown files.
+This script utilizes Webshare rotating residential proxies to bypass IP bans and
+formats the output for readability, complete with a run-on paragraph detector.
+
+Website: https://code.oldmanumby.com
+"""
+
+author = "B.A. Umberger (Old Man Umby)"
+copyright = "Copyright 2026, B.A. Umberger"
+credits = ["B.A. Umberger"]
+license = "GPL-3.0"
+version = "1.0.0"
+maintainer = "B.A. Umberger"
+status = "Production"
+
 import os
 import re
 import sys
 import time
 import argparse
+import json
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound, TranscriptsDisabled, IpBlocked
 from youtube_transcript_api.proxies import WebshareProxyConfig
 import yt_dlp
 
 # ========================= CONFIG =========================
 RUN_ON_THRESHOLD = 1200  # characters — raise/lower if needed
+CONFIG_FILE = "transcriptPhorge.conf"
 # =========================================================
+
+def load_config():
+    """Loads configuration settings from the local conf file."""
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            return {}
+    return {}
+
+def save_config(config):
+    """Saves configuration settings to the local conf file."""
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(config, f, indent=4)
 
 def sanitize_filename(name: str) -> str:
     name = re.sub(r'[\\/*?:"<>|]', '_', name)
@@ -100,7 +139,8 @@ def get_delay_seconds():
     print("  3) 60")
     print("  4) 90")
     print("  5) 120")
-    choice = input("Enter number (1–5) or press Enter for 30: ").strip()
+    print("Enter number (1–5) or press Enter for 30:")
+    choice = input("> ").strip()
 
     delays = {1: 15, 2: 30, 3: 60, 4: 90, 5: 120}
     try:
@@ -119,11 +159,25 @@ def main():
 
     print("YouTube Transcript Downloader with Run-on Report\n")
 
-    username = input("Webshare username: ").strip()
-    password = input("Webshare password: ").strip()
+    # Load configuration for Webshare credentials
+    config = load_config()
+    username = config.get("webshare_username")
+    password = config.get("webshare_password")
+
     if not username or not password:
-        print("Credentials required.")
-        sys.exit(1)
+        print("Webshare credentials required. You can get these at https://www.webshare.io/")
+        print("Webshare username:")
+        username = input("> ").strip()
+        print("Webshare password:")
+        password = input("> ").strip()
+        if not username or not password:
+            print("Credentials required to proceed.")
+            sys.exit(1)
+        
+        config["webshare_username"] = username
+        config["webshare_password"] = password
+        save_config(config)
+        print(f"Credentials saved to {CONFIG_FILE} for future use.\n")
 
     ytt = YouTubeTranscriptApi(
         proxy_config=WebshareProxyConfig(
@@ -143,14 +197,16 @@ def main():
 
     while True:
         if args.single:
-            url = input("\nEnter video URL (or Enter to quit): ").strip()
+            print("\nEnter video URL (or Enter to quit):")
+            url = input("> ").strip()
             if not url:
                 break
             vid_id = url.split("v=")[-1].split("&")[0] if "v=" in url else url.split("/")[-1]
             videos = [{'id': vid_id, 'title': "Single Video", 'url': url}]
             start_i = 1
         else:
-            playlist_url = input("\nEnter playlist URL (or Enter to quit): ").strip()
+            print("\nEnter playlist URL (or Enter to quit):")
+            playlist_url = input("> ").strip()
             if not playlist_url:
                 break
             print("\nFetching playlist...")
@@ -196,7 +252,8 @@ def main():
                 print(f"   Pausing {delay_seconds} seconds before next video...")
                 time.sleep(delay_seconds)
 
-        again = input("\nProcess another? (y/n): ").strip().lower()
+        print("\nProcess another? (y/n):")
+        again = input("> ").strip().lower()
         if again != 'y':
             break
 
