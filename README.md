@@ -1,12 +1,12 @@
-![Apps rePhorged](Apps_rePhorged.png)
+![Apps-reForged-Logo](Apps-reForged.png)
 
-# transcriptPhorge
+# transcriptForged
 
 A simple, reliable Python script to download English transcripts from YouTube playlists or single videos and save them as clean, paragraph-grouped Markdown files.
 
 ## Overview
 
-YouTube aggressively blocks repeated caption requests, even from residential IPs. transcriptPhorge bypasses these IP blocks using Webshare rotating residential proxies—the method recommended to reliably pull transcripts at scale.
+YouTube aggressively blocks repeated caption requests, even from residential IPs. transcriptForged bypasses these IP blocks using Webshare rotating residential proxies—the method recommended to reliably pull transcripts at scale.
 
 The application groups standard caption lines into readable paragraphs instead of outputting massive blocks of unformatted text or hard-to-read one-liners. It automatically flags transcripts with overly long, unbroken sections (often found in Q&A or monologue videos) so you can review them. Be aware that the final transcript will only be as good as the original automated YouTube transcript.
 
@@ -27,27 +27,27 @@ The application groups standard caption lines into readable paragraphs instead o
 
 ## Installation
 
-1. Download the script to your local machine. You can clone the repository or download the latest release: `git clone https://github.com/oldmanumby/transcriptPhorge.git`
-2. Change into the project directory: `cd transcriptPhorge`
+1. Download the script to your local machine. You can clone the repository or download the latest release: `git clone https://github.com/oldmanumby/transcriptForged.git`
+2. Change into the project directory: `cd transcriptForged`
 3. Install dependencies: `pip install youtube-transcript-api yt-dlp`
 
 ## Configuration
 
-When you first run transcriptPhorge, you'll be prompted to configure your proxy settings. You must set up a Webshare Rotating Residential proxy before proceeding:
+When you first run transcriptForged, you'll be prompted to configure your proxy settings. You must set up a Webshare Rotating Residential proxy before proceeding:
 
 1. Go to https://www.webshare.io/ and sign up (the free trial provides enough data for testing).
 2. Select **Rotating Residential** proxies (datacenter/static proxies will be blocked by YouTube).
 3. From your Webshare dashboard, locate your **Proxy Username** and **Proxy Password**.
 
-When prompted by the script, enter these credentials. All settings are automatically saved to `transcriptPhorge.conf` in the same directory as the script for future use.
+When prompted by the script, enter these credentials. All settings are automatically saved to `transcriptForged.conf` in the same directory as the script for future use.
 
 ## Usage
 
 You can execute the script from your terminal or command prompt. It will process each video, fetching the transcript via Webshare, and save it as a numbered Markdown file in the `transcripts/` folder.
 
-**Playlist Mode (Default)** Fetch an entire playlist at once: `python transcriptPhorge.py`
+**Playlist Mode (Default)** Fetch an entire playlist at once: `python transcriptForged.py`
 
-**Single Video Mode** Fetch one video at a time using the `--single` flag: `python transcriptPhorge.py --single`
+**Single Video Mode** Fetch one video at a time using the `--single` flag: `python transcriptForged.py --single`
 
 ### Example Workflow
 

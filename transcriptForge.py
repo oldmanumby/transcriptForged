@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-transcriptPhorge
+transcriptForged
 
 A simple, reliable Python script to download English transcripts from YouTube
 playlists or single videos and save them as clean, paragraph-grouped Markdown files.
@@ -32,7 +32,7 @@ import yt_dlp
 
 # ========================= CONFIG =========================
 RUN_ON_THRESHOLD = 1200  # characters — raise/lower if needed
-CONFIG_FILE = "transcriptPhorge.conf"
+CONFIG_FILE = "transcriptForged.conf"
 # =========================================================
 
 def load_config():

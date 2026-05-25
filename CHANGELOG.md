@@ -1,4 +1,4 @@
-# transcriptPhorge Changelog
+# transcriptForged Changelog
 
 All notable changes to this project will be documented in this file. The format is based on Keep a Changelog, and this project adheres to Semantic Versioning.
 
@@ -14,5 +14,5 @@ All notable changes to this project will be documented in this file. The format 
 - Smart Markdown generation that groups transcript lines into readable paragraphs based on punctuation and length limits.
 - Run-on text detection & report at the end of execution to flag unbroken monologue blocks.
 - Robust transient error handling and automatic retry mechanics for `youtube-transcript-api`.
-- Safe credential handling via `transcriptPhorge.conf` to prevent hard-coding secrets.
+- Safe credential handling via `transcriptForged.conf` to prevent hard-coding secrets.
 - Configurable delays between requests to balance speed and stealth.
