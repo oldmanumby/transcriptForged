@@ -45,7 +45,7 @@ When prompted by the script, enter these credentials. All settings are automatic
 
 You can execute the script from your terminal or command prompt. It will process each video, fetching the transcript via Webshare, and save it as a numbered Markdown file in the `transcripts/` folder.
 
-**Playlist Mode (Default)** Fetch an entire playlist at once: `python transcriptForged.py`
+**Playlist Mode (Default)** Fetch an entire playlist at once: `python3 transcriptForged.py`
 
 **Single Video Mode** Fetch one video at a time using the `--single` flag: `python transcriptForged.py --single`
 
