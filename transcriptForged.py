@@ -223,6 +223,7 @@ def main():
 
             safe_title = sanitize_filename(title)
             filename = f"{i:02d} - {safe_title}.md" if not args.single else f"{safe_title}.md"
+            filepath = os.path.join(output_folder, filename)
 
             if os.path.exists(filepath):
                 print(f"   Skipping (already exists)")
