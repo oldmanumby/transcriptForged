@@ -16,7 +16,7 @@ author = "B.A. Umberger (Old Man Umby)"
 copyright = "Copyright 2026, B.A. Umberger"
 credits = ["B.A. Umberger"]
 license = "GPL-3.0"
-version = "1.0.0"
+version = "1.0.1"
 maintainer = "B.A. Umberger"
 status = "Production"
 
@@ -201,8 +201,8 @@ def main():
             url = input("> ").strip()
             if not url:
                 break
-            vid_id = url.split("v=")[-1].split("&")[0] if "v=" in url else url.split("/")[-1]
-            videos = [{'id': vid_id, 'title': "Single Video", 'url': url}]
+            print("\nFetching video info...")
+            videos = get_playlist_videos(url)
             start_i = 1
         else:
             print("\nEnter playlist URL (or Enter to quit):")
