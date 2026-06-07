@@ -47,7 +47,7 @@ You can execute the script from your terminal or command prompt. It will process
 
 **Playlist Mode (Default)** Fetch an entire playlist at once: `python3 transcriptForged.py`
 
-**Single Video Mode** Fetch one video at a time using the `--single` flag: `python transcriptForged.py --single`
+**Single Video Mode** Fetch one video at a time using the `--single` flag: `python3 transcriptForged.py --single`
 
 ### Example Workflow
 
